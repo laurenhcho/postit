@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post it! — Demo</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+body { background: #f0f4f3; }
+
+.demo-wrap {
+  max-width: 420px; margin: 2rem auto;
+  padding: 0 1rem 3rem;
+}
+.demo-intro {
+  text-align: center; padding: 1.5rem 0 1rem;
+}
+.demo-intro h1 { font-size: 22px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.demo-intro p { font-size: 13px; color: var(--ink-light); }
+
+/* Phone shell */
+.phone {
+  background: var(--white);
+  border-radius: var(--r-phone);
+  border: 2px solid var(--border);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+  overflow: hidden;
+  min-height: 640px;
+  display: flex; flex-direction: column;
+}
+
+/* Top bar */
+.phone-topbar {
+  background: var(--white);
+  border-bottom: 1px solid #f0f6f3;
+  padding: 12px 16px 0; flex-shrink: 0;
+}
+.phone-topbar-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 10px;
+}
+.phone-brand { display: flex; align-items: center; gap: 7px; font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; color: var(--ink); }
+.phone-brand-sq { width: 24px; height: 24px; border-radius: 6px; background: #1a2320; display: flex; align-items: center; justify-content: center; font-size: 13px; }
+.phone-create-btn {
+  background: var(--teal); color: #fff;
+  font-size: 11px; font-weight: 700;
+  padding: 5px 12px; border-radius: 7px;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; gap: 4px;
+}
+
+/* Category pills */
+.cat-scroll { display: flex; gap: 6px; padding: 0 0 11px; overflow-x: auto; scrollbar-width: none; }
+.cat-scroll::-webkit-scrollbar { display: none; }
+.cat-pill {
+  font-size: 11px; font-weight: 600;
+  padding: 5px 13px; border-radius: 20px;
+  white-space: nowrap; cursor: pointer; border: none;
+  background: var(--white); color: var(--ink-mid);
+  border: 1.5px solid var(--border);
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  display: flex; align-items: center; gap: 4px;
+}
+.cat-pill.active { background: var(--teal); color: #fff; border-color: var(--teal); }
+.cat-pill .pill-icon { font-size: 12px; }
+
+/* Screen switcher */
+.screen { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.screen.active { display: flex; }
+
+/* ── DISCOVER SCREEN ── */
+.swipe-hint {
+  text-align: center; font-size: 10px; color: var(--teal);
+  font-weight: 500; padding: 5px 0 6px;
+  background: #f7fcfa; border-bottom: 1px solid #edf7f3;
+  flex-shrink: 0;
+}
+.card-stack-wrap { flex: 1; padding: 14px 16px; position: relative; overflow: hidden; }
+.event-card {
+  background: var(--white); border: 2px solid var(--teal);
+  border-radius: 14px; overflow: hidden;
+  cursor: grab; user-select: none;
+  transition: transform 0.15s, box-shadow 0.15s;
+  touch-action: none;
+}
+.event-card:active { cursor: grabbing; }
+.event-card.swiping-left { transform: translateX(-120%) rotate(-8deg); opacity: 0; transition: transform 0.3s ease, opacity 0.3s; }
+.event-card.swiping-right { transform: translateX(120%) rotate(8deg); opacity: 0; transition: transform 0.3s ease, opacity 0.3s; }
+.event-card-img {
+  height: 160px; position: relative;
+  background: linear-gradient(135deg, #1a2320, #2a4a42);
+  display: flex; align-items: center; justify-content: center;
+}
+.event-card-img.arts { background: linear-gradient(135deg, #2a1a3a, #4a2a5a); }
+.event-card-img.food { background: linear-gradient(135deg, #3a2a0a, #6a4a0a); }
+.event-card-img.social { background: linear-gradient(135deg, #0a2a3a, #0a4a5a); }
+.event-card-img.volunteer { background: linear-gradient(135deg, #0a3a1a, #0a5a2a); }
+.event-card-img.academic { background: linear-gradient(135deg, #1a1a3a, #2a2a5a); }
+.event-img-text { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; color: rgba(255,255,255,0.85); text-align: center; line-height: 1.4; padding: 0 1rem; }
+.event-badge {
+  position: absolute; top: 10px; right: 10px;
+  background: #1a2320; color: #fff;
+  font-size: 9px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+}
+.event-card-body { padding: 14px 16px 10px; }
+.event-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.event-org { font-size: 12px; color: var(--teal); font-weight: 600; margin-bottom: 10px; }
+.event-meta { display: flex; flex-direction: column; gap: 4px; margin-bottom: 12px; }
+.event-meta-row { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--ink-mid); }
+.event-meta-icon { font-size: 14px; }
+.event-desc { font-size: 13px; color: var(--ink-light); line-height: 1.6; margin-bottom: 12px; }
+.event-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.event-tag { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+.event-tag.teal { background: var(--teal-light); color: var(--teal-dark); }
+.event-tag.amber { background: #faeeda; color: #633806; }
+.event-tag.blue { background: #e6f1fb; color: #0c447c; }
+.event-tag.coral { background: #faece7; color: #712b13; }
+.event-tag.green { background: #eaf3de; color: #3b6d11; }
+
+/* Swipe actions */
+.swipe-actions {
+  display: flex; justify-content: center; gap: 24px;
+  padding: 10px 16px 14px; flex-shrink: 0;
+  border-top: 1px solid #f0f6f3;
+}
+.swipe-btn {
+  width: 52px; height: 52px; border-radius: 50%;
+  border: none; cursor: pointer; font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.15s;
+}
+.swipe-btn:hover { transform: scale(1.08); }
+.swipe-skip { background: #fdeaea; }
+.swipe-save { background: var(--teal-light); border: 2px solid var(--teal); }
+.swipe-cal { background: #e6f1fb; }
+
+/* Swipe feedback overlay */
+.swipe-feedback {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 48px; opacity: 0;
+  pointer-events: none; z-index: 10;
+  transition: opacity 0.1s;
+}
+.swipe-feedback.show { opacity: 1; }
+
+/* Empty state */
+.empty-state { display: none; flex: 1; align-items: center; justify-content: center; flex-direction: column; gap: 12px; padding: 2rem; text-align: center; }
+.empty-state.show { display: flex; }
+.empty-state h3 { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--ink); }
+.empty-state p { font-size: 13px; color: var(--ink-light); }
+
+/* Map view */
+.map-screen-header { padding: 12px 16px; border-bottom: 1px solid #f0f6f3; flex-shrink: 0; }
+.map-screen-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; color: var(--ink); }
+.map-screen-sub { font-size: 11px; color: var(--teal); }
+.map-frame { flex: 1; position: relative; min-height: 260px; }
+.map-frame iframe { width: 100%; height: 100%; min-height: 260px; border: none; display: block; }
+.map-events { padding: 10px 14px; border-top: 1px solid #f0f6f3; flex-shrink: 0; }
+.map-event-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 0; border-bottom: 1px solid #f5f5f5;
+}
+.map-event-row:last-child { border-bottom: none; }
+.map-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+.map-event-name { font-size: 12px; font-weight: 600; color: var(--ink); flex: 1; }
+.map-event-loc { font-size: 10px; color: var(--ink-light); }
+.map-live { font-size: 9px; font-weight: 700; background: var(--teal-light); color: var(--teal-dark); padding: 2px 7px; border-radius: 10px; }
+
+/* Saved screen */
+.saved-screen { background: #111a17; }
+.saved-header { padding: 14px 16px 10px; flex-shrink: 0; }
+.saved-title { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 700; color: #fff; }
+.saved-sub { font-size: 11px; color: rgba(255,255,255,0.4); margin-bottom: 10px; }
+.saved-tabs { display: flex; gap: 6px; }
+.saved-tab { font-size: 10px; font-weight: 600; padding: 4px 12px; border-radius: 20px; border: none; cursor: pointer; }
+.saved-tab.active { background: var(--teal); color: #fff; }
+.saved-tab.inactive { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5); }
+.saved-list { flex: 1; overflow-y: auto; padding: 8px 14px; }
+.saved-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  background: rgba(255,255,255,0.05); border-radius: 8px;
+  padding: 10px 11px; margin-bottom: 7px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.saved-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); margin-top: 4px; flex-shrink: 0; }
+.saved-name { font-size: 12px; font-weight: 600; color: #fff; }
+.saved-meta { font-size: 10px; color: rgba(255,255,255,0.4); line-height: 1.5; margin-top: 2px; }
+.saved-cal-note { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--teal); margin-top: 8px; padding: 7px 10px; background: rgba(24,181,160,0.1); border-radius: 6px; flex-shrink: 0; }
+
+/* Buckets screen */
+.buckets-header { padding: 12px 16px 8px; border-bottom: 1px solid #f0f6f3; flex-shrink: 0; }
+.buckets-header-row { display: flex; align-items: center; justify-content: space-between; }
+.buckets-title { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; color: var(--ink); }
+.buckets-sub { font-size: 10px; color: var(--teal); }
+.new-bucket-btn { background: var(--teal); color: #fff; font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 6px; border: none; cursor: pointer; }
+.buckets-list { flex: 1; overflow-y: auto; padding: 10px 14px; }
+.bucket-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-card); padding: 11px 12px;
+  margin-bottom: 8px; box-shadow: var(--shadow);
+}
+.bucket-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.bucket-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.bucket-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+.bucket-members { font-size: 10px; color: var(--ink-light); }
+.bucket-event { font-size: 11px; color: var(--teal); font-weight: 500; }
+.bucket-time { font-size: 10px; color: var(--ink-light); }
+.invite-btn { width: 100%; background: var(--teal-light); color: var(--teal-dark); border: none; border-radius: 6px; padding: 7px; font-size: 11px; font-weight: 600; cursor: pointer; }
+.bucket-how { background: var(--bg); border-radius: 6px; padding: 8px 10px; margin-top: 8px; font-size: 11px; color: var(--ink-light); line-height: 1.5; }
+
+/* Profile screen */
+.profile-header { padding: 14px 16px 10px; border-bottom: 1px solid #f0f6f3; flex-shrink: 0; }
+.profile-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.profile-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.profile-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+.profile-email { font-size: 11px; color: var(--ink-light); }
+.profile-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
+.profile-stat { background: var(--bg); border-radius: 6px; padding: 8px; text-align: center; border: 1px solid var(--border); }
+.profile-stat-num { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 700; color: var(--ink); }
+.profile-stat-label { font-size: 9px; color: var(--ink-light); margin-top: 1px; }
+.profile-body { flex: 1; overflow-y: auto; padding: 10px 14px; }
+.profile-section-title { font-size: 12px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.profile-section-sub { font-size: 11px; color: var(--ink-light); margin-bottom: 10px; }
+.org-row { display: flex; align-items: center; gap: 8px; padding: 7px 0; border-bottom: 1px solid var(--border); }
+.org-avatar { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: #fff; flex-shrink: 0; }
+.org-name { font-size: 12px; font-weight: 600; color: var(--ink); flex: 1; }
+.org-count { font-size: 10px; color: var(--ink-light); }
+.unfollow-btn { font-size: 10px; color: var(--teal); font-weight: 600; background: none; border: none; cursor: pointer; }
+
+/* Bottom nav */
+.phone-bottom-nav {
+  display: flex; justify-content: space-around;
+  padding: 8px 0 12px; border-top: 1px solid #f0f6f3;
+  background: var(--white); flex-shrink: 0;
+}
+.saved-phone-nav { background: #1a2420; border-top-color: #2a3830; }
+.bnav-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2px; cursor: pointer; padding: 2px 10px;
+  font-size: 9px; font-weight: 600; color: var(--ink-light);
+  border: none; background: none; transition: color 0.15s;
+}
+.bnav-item .bnav-icon { font-size: 18px; line-height: 1; }
+.bnav-item.active { color: var(--teal); }
+.bnav-item.active-dark { color: var(--teal); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-brand">
+    <div class="nav-logo">😊</div>
+    Post It
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="resources.html">Resources</a>
+    <a href="demo.html">Demo</a>
+    <a href="connect.html">Connect</a>
+    <a href="demo.html" class="nav-cta">Try the app →</a>
+  </div>
+</nav>
+
+<div class="demo-wrap">
+  <div class="demo-intro">
+    <h1>Post it! — Interactive Demo</h1>
+    <p>Anyone can photograph a flyer or create a post — AI extracts the details, you browse, save, and sync to your calendar.</p>
+  </div>
+
+  <div class="phone" id="phone">
+
+    <!-- TOP BAR (shown on all screens except saved) -->
+    <div class="phone-topbar" id="topbar">
+      <div class="phone-topbar-row">
+        <div class="phone-brand"><div class="phone-brand-sq">😊</div>Post It</div>
+        <button class="phone-create-btn" onclick="showCreateModal()">＋ Create</button>
+      </div>
+      <div class="cat-scroll" id="catScroll">
+        <button class="cat-pill active" data-cat="all" onclick="filterCat(this)"><span class="pill-icon">⊞</span> All</button>
+        <button class="cat-pill" data-cat="arts" onclick="filterCat(this)"><span class="pill-icon">🎨</span> Arts</button>
+        <button class="cat-pill" data-cat="food" onclick="filterCat(this)"><span class="pill-icon">🍕</span> Free Food</button>
+        <button class="cat-pill" data-cat="professional" onclick="filterCat(this)"><span class="pill-icon">💼</span> Professional</button>
+        <button class="cat-pill" data-cat="academic" onclick="filterCat(this)"><span class="pill-icon">📚</span> Academic</button>
+        <button class="cat-pill" data-cat="social" onclick="filterCat(this)"><span class="pill-icon">🎉</span> Social</button>
+        <button class="cat-pill" data-cat="volunteer" onclick="filterCat(this)"><span class="pill-icon">🤝</span> Volunteering</button>
+        <button class="cat-pill" data-cat="sciences" onclick="filterCat(this)"><span class="pill-icon">🔬</span> Sciences</button>
+      </div>
+    </div>
+
+    <!-- DISCOVER SCREEN -->
+    <div class="screen active" id="screen-discover">
+      <div class="swipe-hint">← Swipe left to skip &nbsp;·&nbsp; Swipe right to save →</div>
+      <div class="card-stack-wrap" id="cardWrap">
+        <div class="swipe-feedback" id="swipeFeedback"></div>
+        <div class="empty-state" id="emptyState">
+          <div style="font-size:48px">📌</div>
+          <h3>You've seen everything!</h3>
+          <p>Change your filter or check back later for new events.</p>
+        </div>
+        <!-- Cards injected by JS -->
+      </div>
+      <div class="swipe-actions">
+        <button class="swipe-btn swipe-skip" onclick="doSwipe('left')" title="Skip">✕</button>
+        <button class="swipe-btn swipe-cal" onclick="saveAndCal()" title="Save + Add to Calendar">📅</button>
+        <button class="swipe-btn swipe-save" onclick="doSwipe('right')" title="Save">✓</button>
+      </div>
+    </div>
+
+    <!-- MAP SCREEN -->
+    <div class="screen" id="screen-map">
+      <div class="map-screen-header">
+        <div class="map-screen-title">📍 Live Campus Map</div>
+        <div class="map-screen-sub">Events happening right now</div>
+      </div>
+      <div class="map-frame">
+        <iframe
+          src="https://maps.google.com/maps?q=Carnegie+Mellon+University,+Pittsburgh,+PA&z=15&output=embed&t=m"
+          allowfullscreen loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+      <div class="map-events">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--teal);margin-bottom:7px">Active Events</div>
+        <div class="map-event-row">
+          <div class="map-dot"></div>
+          <div style="flex:1"><div class="map-event-name">ScottyLabs Info Session</div><div class="map-event-loc">📍 Doherty Hall &nbsp;·&nbsp; 7:00–9:00 PM</div></div>
+          <div class="map-live">LIVE</div>
+        </div>
+        <div class="map-event-row">
+          <div class="map-dot" style="background:#ef9f27"></div>
+          <div style="flex:1"><div class="map-event-name">Free Pizza — CS Student Council</div><div class="map-event-loc">📍 Wean Hall 4th Floor &nbsp;·&nbsp; 12–2 PM</div></div>
+          <div class="map-live">LIVE</div>
+        </div>
+        <div class="map-event-row">
+          <div class="map-dot" style="background:#378add"></div>
+          <div style="flex:1"><div class="map-event-name">Spring Arts Showcase</div><div class="map-event-loc">📍 Purnell Center &nbsp;·&nbsp; 4:00 PM</div></div>
+          <div style="font-size:9px;color:var(--ink-light)">Today</div>
+        </div>
+        <div class="map-event-row">
+          <div class="map-dot" style="background:#639922"></div>
+          <div style="flex:1"><div class="map-event-name">CMU Volunteers — Park Clean-Up</div><div class="map-event-loc">📍 Schenley Park &nbsp;·&nbsp; 10:00 AM</div></div>
+          <div style="font-size:9px;color:var(--ink-light)">Sat</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SAVED SCREEN -->
+    <div class="screen saved-screen" id="screen-saved">
+      <div class="saved-header">
+        <div class="saved-title">Saved Events</div>
+        <div class="saved-sub">Your upcoming plans</div>
+        <div class="saved-tabs">
+          <button class="saved-tab active">Confirmed (3)</button>
+          <button class="saved-tab inactive">Pending (2)</button>
+        </div>
+      </div>
+      <div class="saved-list" id="savedList">
+        <div class="saved-item">
+          <div class="saved-dot"></div>
+          <div><div class="saved-name">ScottyLabs Info Session</div><div class="saved-meta">📅 Apr 24 &nbsp;·&nbsp; 🕖 7:00 PM<br>📍 Doherty Hall</div></div>
+        </div>
+        <div class="saved-item">
+          <div class="saved-dot" style="background:#5dcaa5"></div>
+          <div><div class="saved-name">Fence Painting Night</div><div class="saved-meta">📅 Apr 21 &nbsp;·&nbsp; 🕚 11:00 PM<br>📍 The Fence</div></div>
+        </div>
+        <div class="saved-item" style="border:1px solid var(--teal)">
+          <div class="saved-dot" style="background:#ef9f27"></div>
+          <div><div class="saved-name">Free Pizza — CS Student Council</div><div class="saved-meta">📅 Apr 24 &nbsp;·&nbsp; 🕛 12:00 PM<br>📍 Wean Hall</div></div>
+        </div>
+      </div>
+      <div class="saved-cal-note">📅 3 events synced to your Google Calendar</div>
+    </div>
+
+    <!-- BUCKETS SCREEN -->
+    <div class="screen" id="screen-buckets">
+      <div class="buckets-header">
+        <div class="buckets-header-row">
+          <div>
+            <div class="buckets-title">Event Buckets</div>
+            <div class="buckets-sub">Shared playlists for events</div>
+          </div>
+          <button class="new-bucket-btn">+ New Bucket</button>
+        </div>
+      </div>
+      <div class="buckets-list">
+        <div class="bucket-card">
+          <div class="bucket-card-top">
+            <div class="bucket-icon" style="background:#1fa882">🎬</div>
+            <div>
+              <div class="bucket-name">Friday Night Moves</div>
+              <div class="bucket-members">You, Sarah, Mike</div>
+            </div>
+          </div>
+          <div class="bucket-event">ScottyLabs Info Session</div>
+          <div class="bucket-time">Apr 24 &nbsp;·&nbsp; 7:00 PM</div>
+          <button class="invite-btn" style="margin-top:8px">👥 Invite Friends</button>
+        </div>
+        <div class="bucket-card">
+          <div class="bucket-card-top">
+            <div class="bucket-icon" style="background:#5dcaa5">📚</div>
+            <div>
+              <div class="bucket-name">Midterm Stress Relief</div>
+              <div class="bucket-members">You, Emily, Jake, Nina</div>
+            </div>
+          </div>
+          <div class="bucket-event">Friday Night Block Party</div>
+          <div class="bucket-time">Apr 18 &nbsp;·&nbsp; 8:00 PM</div>
+          <button class="invite-btn" style="margin-top:8px">👥 Invite Friends</button>
+        </div>
+        <div class="bucket-how">
+          <strong style="color:var(--ink)">How it works:</strong> Event buckets are like collaborative playlists for events. Create themed buckets and invite friends to add events together. When anyone confirms, it shows up for everyone.
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE SCREEN -->
+    <div class="screen" id="screen-profile">
+      <div class="profile-header">
+        <div class="profile-top">
+          <div class="profile-avatar">MS</div>
+          <div>
+            <div class="profile-name">Mahee Shah</div>
+            <div class="profile-email">mahees@andrew.cmu.edu</div>
+          </div>
+          <div style="margin-left:auto;font-size:18px;cursor:pointer">⚙️</div>
+        </div>
+        <div class="profile-stats">
+          <div class="profile-stat"><div class="profile-stat-num">24</div><div class="profile-stat-label">Saved Events</div></div>
+          <div class="profile-stat"><div class="profile-stat-num">3</div><div class="profile-stat-label">My Flyers</div></div>
+          <div class="profile-stat"><div class="profile-stat-num">4</div><div class="profile-stat-label">Following</div></div>
+        </div>
+      </div>
+      <div class="profile-body">
+        <div class="profile-section-title">Following Organizations</div>
+        <div class="profile-section-sub">Get notified when these organizations post new events</div>
+        <div class="org-row"><div class="org-avatar" style="background:#378add">S</div><div style="flex:1"><div class="org-name">Student Government</div><div class="org-count">15 events</div></div><button class="unfollow-btn">Unfollow</button></div>
+        <div class="org-row"><div class="org-avatar" style="background:#d85a30">C</div><div style="flex:1"><div class="org-name">Computer Science Club</div><div class="org-count">9 events</div></div><button class="unfollow-btn">Unfollow</button></div>
+        <div class="org-row"><div class="org-avatar" style="background:#18b5a0">A</div><div style="flex:1"><div class="org-name">Asian Student Association</div><div class="org-count">12 events</div></div><button class="unfollow-btn">Unfollow</button></div>
+        <div class="org-row"><div class="org-avatar" style="background:#639922">V</div><div style="flex:1"><div class="org-name">CMU Volunteers</div><div class="org-count">6 events</div></div><button class="unfollow-btn">Unfollow</button></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="phone-bottom-nav" id="bottomNav">
+      <button class="bnav-item active" onclick="switchScreen('discover',this)">
+        <span class="bnav-icon">🏠</span>Discover
+      </button>
+      <button class="bnav-item" onclick="switchScreen('saved',this)">
+        <span class="bnav-icon">🔖</span>Saved
+      </button>
+      <button class="bnav-item" onclick="switchScreen('buckets',this)">
+        <span class="bnav-icon">🗂</span>Buckets
+      </button>
+      <button class="bnav-item" onclick="switchScreen('map',this)">
+        <span class="bnav-icon">📍</span>Map
+      </button>
+      <button class="bnav-item" onclick="switchScreen('profile',this)">
+        <span class="bnav-icon">👤</span>Profile
+      </button>
+    </div>
+
+  </div><!-- end phone -->
+
+<!-- Create modal -->
+<div id="createModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;align-items:center;justify-content:center;padding:1rem">
+  <div style="background:var(--white);border-radius:14px;padding:1.5rem;max-width:360px;width:100%">
+    <h3 style="font-family:'Fraunces',serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px">Create a post</h3>
+    <p style="font-size:13px;color:var(--ink-light);margin-bottom:1.25rem">Photograph a flyer or create an event manually. Our AI will extract the details automatically.</p>
+    <button onclick="simulateAIScan()" style="width:100%;background:var(--teal);color:#fff;border:none;border-radius:8px;padding:13px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">📸 Photograph a flyer — AI extracts details</button>
+    <button onclick="closeCreateModal()" style="width:100%;background:var(--bg);color:var(--ink);border:1px solid var(--border);border-radius:8px;padding:13px;font-size:14px;font-weight:500;cursor:pointer">✏️ Create event manually</button>
+    <button onclick="closeCreateModal()" style="width:100%;background:none;border:none;color:var(--ink-light);font-size:13px;margin-top:10px;cursor:pointer">Cancel</button>
+  </div>
+</div>
+</div><!-- end demo-wrap -->
+
+<footer>
+  <div class="foot-brand">Post it! 📌</div>
+  <p>An AI-powered digital bulletin board for CMU campus events.</p>
+  <p style="margin-top:6px">Team C2 — GLAM &nbsp;·&nbsp; Carnegie Mellon University &nbsp;·&nbsp; <a href="index.html">← Back to site</a></p>
+</footer>
+
+<script src="js/main.js"></script>
+<script>
+const events = [
+  { id:9, title:'Upload a Flyer', org:'Post it! AI', cat:'all', imgClass:'', badge:'AI Scan', date:'Tap to try', time:'', location:'', interest:'', desc:'Photograph any physical flyer and our AI will automatically extract the event name, date, time, location, and tags. Try it — upload any image!', tags:['AI-powered','New feature'] },
+  { id:1, title:'ScottyLabs Info Session', org:'ScottyLabs', cat:'professional', imgClass:'', badge:'Professional', date:'Friday, April 24', time:'7:00 PM', location:'Doherty Hall', interest:'42 interested', desc:'Join ScottyLabs to learn about our projects and how you can get involved in building apps for the CMU community!', tags:['Professional','Tech'] },
+  { id:2, title:'Free Pizza Night', org:'CS Student Council', cat:'food', imgClass:'food', badge:'Free Food', date:'Monday, April 28', time:'12:00 PM', location:'Wean Hall 4th Floor', interest:'118 interested', desc:'Stop by Wean Hall for free pizza and meet other CS students. No RSVP required — just show up!', tags:['Free Food','Social'] },
+  { id:3, title:'Spring Arts Showcase', org:'CMU School of Art', cat:'arts', imgClass:'arts', badge:'Arts', date:'Friday, April 24', time:'4:00 PM', location:'Purnell Center', interest:'67 interested', desc:'End-of-semester showcase featuring student paintings, sculptures, digital art, and performance pieces. Free and open to all.', tags:['Arts','Free'] },
+  { id:4, title:'Robotics Club Demo Night', org:'CMU Robotics Club', cat:'academic', imgClass:'academic', badge:'Academic', date:'Wednesday, April 23', time:'6:00 PM', location:'Gates Hillman 4405', interest:'55 interested', desc:'Watch live demos of this semester\'s robotics projects. Pizza provided. Everyone welcome — no experience needed.', tags:['Academic','Tech','Free Food'] },
+  { id:5, title:'Schenley Park Clean-Up', org:'CMU Volunteers', cat:'volunteer', imgClass:'volunteer', badge:'Volunteering', date:'Saturday, April 26', time:'10:00 AM', location:'Schenley Park entrance', interest:'31 interested', desc:'Spend a Saturday morning giving back. Gloves, bags, and coffee provided. Great for community service hours.', tags:['Volunteering','Outdoors'] },
+  { id:6, title:'Lunar New Year Cultural Night', org:'Asian Student Association', cat:'social', imgClass:'social', badge:'Social', date:'Saturday, April 26', time:'7:00 PM', location:'Rangos Hall', interest:'203 interested', desc:'Celebrate with traditional performances, food, and cultural exhibits. One of the biggest events of the year — don\'t miss it.', tags:['Social','Food','Cultural'] },
+  { id:7, title:'Bioinformatics Research Symposium', org:'Department of Biology', cat:'sciences', imgClass:'academic', badge:'Sciences', date:'Thursday, April 25', time:'2:00 PM', location:'Mellon Institute', interest:'28 interested', desc:'Undergraduate and graduate students present ongoing research in genomics, computational biology, and molecular science.', tags:['Sciences','Academic'] },
+  { id:8, title:'Improv Comedy Show', org:'Scotch\'n\'Soda Theatre', cat:'arts', imgClass:'arts', badge:'Arts', date:'Friday, April 25', time:'9:00 PM', location:'Rangos Hall', interest:'89 interested', desc:'CMU\'s oldest theatrical organization presents an evening of unscripted comedy. $5 at the door, free with student ID.', tags:['Arts','Comedy','Entertainment'] },
+];
+
+let currentCat = 'all';
+let cardQueue = [];
+let savedIds = new Set();
+
+function getFilteredEvents() {
+  return currentCat === 'all' ? [...events] : events.filter(e => e.cat === currentCat);
+}
+
+function renderCard(ev) {
+  return `<div class="event-card" id="card-${ev.id}" data-id="${ev.id}">
+    <div class="event-card-img ${ev.imgClass}">
+      <div class="event-img-text">${ev.title}</div>
+      <div class="event-badge">${ev.badge}</div>
+    </div>
+    <div class="event-card-body">
+      <div class="event-title">${ev.title}</div>
+      <div class="event-org">${ev.org}</div>
+      <div class="event-meta">
+        <div class="event-meta-row"><span class="event-meta-icon">📅</span>${ev.date}</div>
+        <div class="event-meta-row"><span class="event-meta-icon">🕖</span>${ev.time}</div>
+        <div class="event-meta-row"><span class="event-meta-icon">📍</span>${ev.location}</div>
+        <div class="event-meta-row"><span class="event-meta-icon">👥</span>${ev.interest}</div>
+      </div>
+      <div class="event-desc">${ev.desc}</div>
+      <div class="event-tags">${ev.tags.map(t => `<span class="event-tag teal">${t}</span>`).join('')}</div>
+    </div>
+  </div>`;
+}
+
+function loadQueue() {
+  cardQueue = getFilteredEvents().filter(e => !savedIds.has(e.id));
+  const wrap = document.getElementById('cardWrap');
+  const feedback = document.getElementById('swipeFeedback');
+  const empty = document.getElementById('emptyState');
+  wrap.querySelectorAll('.event-card').forEach(c => c.remove());
+  if (cardQueue.length === 0) {
+    empty.classList.add('show');
+    return;
+  }
+  empty.classList.remove('show');
+  wrap.insertAdjacentHTML('beforeend', renderCard(cardQueue[0]));
+  setupDrag();
+}
+
+function filterCat(btn) {
+  document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  currentCat = btn.dataset.cat;
+  loadQueue();
+}
+
+function showFeedback(emoji) {
+  const fb = document.getElementById('swipeFeedback');
+  fb.textContent = emoji;
+  fb.classList.add('show');
+  setTimeout(() => fb.classList.remove('show'), 600);
+}
+
+function doSwipe(dir) {
+  if (cardQueue.length === 0) return;
+  const card = document.getElementById(`card-${cardQueue[0].id}`);
+  if (!card) return;
+  if (dir === 'right') {
+    savedIds.add(cardQueue[0].id);
+    showFeedback('✅');
+  } else {
+    showFeedback('⏭️');
+  }
+  card.classList.add(dir === 'right' ? 'swiping-right' : 'swiping-left');
+  setTimeout(() => {
+    cardQueue.shift();
+    loadQueue();
+  }, 300);
+}
+
+function saveAndCal() {
+  if (cardQueue.length === 0) return;
+  savedIds.add(cardQueue[0].id);
+  showFeedback('📅');
+  const card = document.getElementById(`card-${cardQueue[0].id}`);
+  if (card) card.classList.add('swiping-right');
+  setTimeout(() => { cardQueue.shift(); loadQueue(); }, 300);
+}
+
+// Drag to swipe
+function setupDrag() {
+  if (cardQueue.length === 0) return;
+  const card = document.getElementById(`card-${cardQueue[0].id}`);
+  if (!card) return;
+  let startX = 0, isDragging = false;
+  const onStart = (x) => { startX = x; isDragging = true; };
+  const onMove = (x) => {
+    if (!isDragging) return;
+    const dx = x - startX;
+    card.style.transform = `translateX(${dx}px) rotate(${dx * 0.04}deg)`;
+    card.style.opacity = 1 - Math.abs(dx) / 300;
+  };
+  const onEnd = (x) => {
+    if (!isDragging) return;
+    isDragging = false;
+    card.style.transform = '';
+    card.style.opacity = '';
+    const dx = x - startX;
+    if (dx > 80) doSwipe('right');
+    else if (dx < -80) doSwipe('left');
+  };
+  card.addEventListener('mousedown', e => onStart(e.clientX));
+  window.addEventListener('mousemove', e => { if (isDragging) onMove(e.clientX); });
+  window.addEventListener('mouseup', e => onEnd(e.clientX));
+  card.addEventListener('touchstart', e => onStart(e.touches[0].clientX), {passive:true});
+  card.addEventListener('touchmove', e => onMove(e.touches[0].clientX), {passive:true});
+  card.addEventListener('touchend', e => onEnd(e.changedTouches[0].clientX));
+}
+
+function switchScreen(name, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.bnav-item').forEach(b => { b.classList.remove('active'); b.classList.remove('active-dark'); });
+  document.getElementById(`screen-${name}`).classList.add('active');
+  btn.classList.add(name === 'saved' ? 'active-dark' : 'active');
+  const topbar = document.getElementById('topbar');
+  const bottomNav = document.getElementById('bottomNav');
+  if (name === 'saved') {
+    topbar.style.display = 'none';
+    bottomNav.classList.add('saved-phone-nav');
+    bottomNav.querySelectorAll('.bnav-item').forEach(b => { b.style.color = ''; });
+  } else {
+    topbar.style.display = '';
+    bottomNav.classList.remove('saved-phone-nav');
+  }
+}
+
+// Create modal
+function showCreateModal() {
+  const modal = document.getElementById('createModal');
+  modal.style.display = 'flex';
+}
+function closeCreateModal() {
+  document.getElementById('createModal').style.display = 'none';
+}
+function simulateAIScan() {
+  document.getElementById('createModal').style.display = 'none';
+  const wrap = document.getElementById('cardWrap');
+  const aiCard = document.createElement('div');
+  aiCard.className = 'event-card';
+  aiCard.id = 'card-ai-preview';
+  aiCard.innerHTML = `
+    <div class="event-card-img" style="background:linear-gradient(135deg,#0e4a40,#18b5a0)">
+      <div class="event-img-text">✨ AI Extracted<br>Event Details</div>
+      <div class="event-badge">AI Scan</div>
+    </div>
+    <div class="event-card-body">
+      <div class="event-title">Detected: CMU Club Fair</div>
+      <div class="event-org">AI extracted from flyer photo</div>
+      <div class="event-meta">
+        <div class="event-meta-row"><span class="event-meta-icon">📅</span>Saturday, April 26</div>
+        <div class="event-meta-row"><span class="event-meta-icon">🕙</span>10:00 AM – 2:00 PM</div>
+        <div class="event-meta-row"><span class="event-meta-icon">📍</span>Wiegand Gym</div>
+      </div>
+      <div class="event-desc" style="background:var(--teal-light);padding:8px 10px;border-radius:6px;color:var(--teal-dark)">✅ AI auto-tagged: Social, Academic, Free — confirm to post this event to the feed.</div>
+      <div class="event-tags"><span class="event-tag teal">Social</span><span class="event-tag teal">Academic</span><span class="event-tag amber">Free</span></div>
+    </div>`;
+  wrap.insertBefore(aiCard, wrap.firstChild);
+}
+
+// Init
+loadQueue();
+</script>
+</body>
+</html>

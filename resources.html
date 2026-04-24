@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Post it! — Resources</title>
+<link rel="stylesheet" href="css/style.css">
+<style>
+.resources-hero { background: var(--white); border-bottom: 1px solid var(--border); padding: 3.5rem 0 2.5rem; }
+.res-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 2rem; }
+.res-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-card); padding: 1.4rem;
+  box-shadow: var(--shadow); transition: transform 0.15s, box-shadow 0.15s;
+}
+.res-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.res-card-icon { font-size: 24px; margin-bottom: 10px; }
+.res-card h3 { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+.res-card p { font-size: 12px; color: var(--ink-light); line-height: 1.55; margin-bottom: 12px; }
+.res-card a {
+  font-size: 12px; font-weight: 600; color: var(--teal);
+  text-decoration: none; display: inline-flex; align-items: center; gap: 4px;
+}
+.res-card a:hover { color: var(--teal-dark); }
+.strategy-section { background: var(--bg); padding: 4rem 0; border-top: 1px solid var(--border); }
+.strategy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 2rem; }
+.strategy-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--r-card); overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.strategy-card-top {
+  display: flex; align-items: center; gap: 10px;
+  padding: 1rem 1.25rem;
+}
+.strategy-card-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--teal-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.strategy-card-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--teal); margin-bottom: 1px; }
+.strategy-card-name { font-family: 'Fraunces', serif; font-size: 14px; font-weight: 700; color: var(--ink); }
+.strategy-tags { display: flex; gap: 5px; margin-left: auto; flex-wrap: wrap; justify-content: flex-end; }
+.stag { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.stag-g { background: var(--teal-light); color: var(--teal-dark); }
+.stag-w { background: #faeeda; color: #633806; }
+.stag-r { background: #fcebeb; color: #791f1f; }
+.strategy-card-body { border-top: 1px solid #f0f6f3; padding: 1rem 1.25rem; background: #fafcfb; }
+.strategy-card-body p { font-size: 13px; color: var(--ink-light); line-height: 1.7; }
+.swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 1.5rem; }
+.swot-card { background: var(--white); border-radius: var(--r-card); border: 1px solid var(--border); padding: 1rem 1.1rem; }
+.swot-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 6px; }
+.swot-label.s { color: var(--teal); }
+.swot-label.w { color: #ba7517; }
+.swot-label.o { color: #378add; }
+.swot-label.t { color: #d85a30; }
+.swot-card p { font-size: 12px; color: var(--ink-mid); line-height: 1.6; }
+.refs-section { background: var(--white); padding: 4rem 0; border-top: 1px solid var(--border); }
+.ref-item { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+.ref-item:last-child { border-bottom: none; }
+.ref-item a { color: var(--teal); text-decoration: none; }
+.ref-item a:hover { text-decoration: underline; }
+@media(max-width:768px){ .res-grid,.strategy-grid,.swot-grid{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="nav-brand"><div class="nav-logo">😊</div>Post It</a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="resources.html">Resources</a>
+    <a href="demo.html">Demo</a>
+    <a href="connect.html">Connect</a>
+    <a href="demo.html" class="nav-cta">Try the app →</a>
+  </div>
+</nav>
+
+<div class="resources-hero">
+  <div class="container">
+    <div class="eyebrow"><div class="eyebrow-pip"></div>Documents & references</div>
+    <h1 class="section-title">Project resources</h1>
+    <p class="section-sub">Key documents, data sources, strategic analysis, and references behind Post it!</p>
+    <div class="res-grid reveal">
+      <div class="res-card">
+        <div class="res-card-icon">📄</div>
+        <h3>Business Plan</h3>
+        <p>Full strategy, market analysis, financial plan, and platform overview for Post it!</p>
+        <a href="#">Download PDF →</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">🧠</div>
+        <h3>Social Theories</h3>
+        <p>TAM, Equity & Inclusion Framework, and Network Effects Theory applied to Post it!</p>
+        <a href="#">Read doc →</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">📊</div>
+        <h3>Survey Data</h3>
+        <p>36 CMU student responses on bulletin board habits, perceived value, and friction points.</p>
+        <a href="#">View data →</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">🔗</div>
+        <h3>Value Chain Analysis</h3>
+        <p>How Post it! creates value across communication, outreach, and campus engagement.</p>
+        <a href="#">Read analysis →</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">📋</div>
+        <h3>Org & Societal Impact</h3>
+        <p>Expected organizational and societal outcomes, risks, and unintended consequences.</p>
+        <a href="#">Read report →</a>
+      </div>
+      <div class="res-card">
+        <div class="res-card-icon">🎨</div>
+        <h3>Figma Prototype</h3>
+        <p>Original design prototype showing the full user journey through the Post it! app.</p>
+        <a href="https://svonk.me/dip/demo" target="_blank">Open Figma →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="strategy-section">
+  <div class="container">
+    <div class="eyebrow reveal"><div class="eyebrow-pip"></div>Strategic analysis</div>
+    <h2 class="section-title reveal">The theory behind the platform</h2>
+    <div class="strategy-grid reveal">
+      <div class="strategy-card">
+        <div class="strategy-card-top">
+          <div class="strategy-card-icon">⏱️</div>
+          <div><div class="strategy-card-label">Theory 01</div><div class="strategy-card-name">Technology Acceptance Model</div></div>
+          <div class="strategy-tags"><span class="stag stag-g">useful</span><span class="stag stag-g">easy</span><span class="stag stag-w">setup friction</span></div>
+        </div>
+        <div class="strategy-card-body"><p>TAM states that users' adoption of a new technology is based on their perception of its usefulness and ease of use. Our website clearly improves finding relevant CMU events and reducing missed opportunities — especially compared to scattered posters and social media posts. Although it may be unfamiliar at first, in the long run students may find it more convenient to consolidate all events on one site.</p></div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-card-top">
+          <div class="strategy-card-icon">⚖️</div>
+          <div><div class="strategy-card-label">Theory 02</div><div class="strategy-card-name">Equity & Inclusion Framework</div></div>
+          <div class="strategy-tags"><span class="stag stag-g">equal floor</span><span class="stag stag-r">algorithm bias</span></div>
+        </div>
+        <div class="strategy-card-body"><p>Those who benefit most are highly engaged, tech-savvy students and larger clubs. Those who may be disadvantaged are less digitally inclined students and smaller organizations. Moving events online wouldn't eliminate this issue completely, but it could help by giving more equal visibility to all events regardless of size.</p></div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-card-top">
+          <div class="strategy-card-icon">🔗</div>
+          <div><div class="strategy-card-label">Theory 03</div><div class="strategy-card-name">Network Effects Theory</div></div>
+          <div class="strategy-tags"><span class="stag stag-g">grows with use</span><span class="stag stag-w">cold start risk</span></div>
+        </div>
+        <div class="strategy-card-body"><p>As more people upload their events, and more people use the website to find these events, the more useful the website becomes. If only a few clubs upload their events, it will become a cascade of people not using it — which is why our launch strategy partners with Student Affairs and high-visibility clubs to seed the platform.</p></div>
+      </div>
+      <div class="strategy-card">
+        <div class="strategy-card-top">
+          <div class="strategy-card-icon">📈</div>
+          <div><div class="strategy-card-label">Strategic analysis</div><div class="strategy-card-name">Competitive Advantage via IS</div></div>
+          <div class="strategy-tags"><span class="stag stag-g">centralized</span><span class="stag stag-g">cost leader</span></div>
+        </div>
+        <div class="strategy-card-body"><p>Instagram stories vanish in 24 hours. Flyers depend on foot traffic. Post it! is always-on, searchable, and calendar-integrated. This places the platform at a narrow scope and as a cost leader — reducing friction for students and printing costs for clubs, strengthening the entire communication value chain on campus.</p></div>
+      </div>
+    </div>
+
+    <div style="margin-top:3rem" class="reveal">
+      <div class="eyebrow"><div class="eyebrow-pip"></div>SWOT analysis</div>
+      <div class="swot-grid">
+        <div class="swot-card"><div class="swot-label s">Strengths</div><p>Clear competitive advantage through accessibility and visibility. Filtering features and Google Calendar connection enhance the user experience and increase student engagement while reducing costs and environmental waste.</p></div>
+        <div class="swot-card"><div class="swot-label w">Weaknesses</div><p>Platform success relies heavily on student adoption. Low initial engagement could undermine effectiveness. Some organizations may find the upload process difficult and become discouraged.</p></div>
+        <div class="swot-card"><div class="swot-label o">Opportunities</div><p>Connections to more platforms such as Tartan Connect. Functionality can expand through more personalization and data analytics. Potential integration with official CMU calendar systems.</p></div>
+        <div class="swot-card"><div class="swot-label t">Threats</div><p>Competition from existing social media students currently use. Low initial engagement could prevent long-term sustainability. Technical difficulties with a centralized platform could undermine campus communication.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="refs-section">
+  <div class="container">
+    <div class="eyebrow reveal"><div class="eyebrow-pip"></div>References</div>
+    <h2 class="section-title reveal">Sources</h2>
+    <div class="reveal">
+      <div class="ref-item">Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. <em>MIS Quarterly, 13</em>(3), 319–340.</div>
+      <div class="ref-item">Katz, M. L., & Shapiro, C. (1985). Network externalities, competition, and compatibility. <em>The American Economic Review, 75</em>(3), 424–440.</div>
+      <div class="ref-item">Laudon, K. C., & Laudon, J. P. (2022). <em>Management information systems: Managing the digital firm</em> (17th ed.). Pearson.</div>
+      <div class="ref-item">Bawden, D., & Robinson, L. (2020). Information overload: An overview. City Research Online. <a href="https://openaccess.city.ac.uk/23544/" target="_blank">openaccess.city.ac.uk</a></div>
+      <div class="ref-item">Rise Vision. (2025). Digital bulletin board vs. traditional notice board. <a href="https://www.risevision.com/blog/digital-bulletin-board-vs-traditional-notice-board" target="_blank">risevision.com</a></div>
+      <div class="ref-item">Newcastle University. (n.d.). Technology acceptance model. TheoryHub. <a href="https://open.ncl.ac.uk/theory-library/technology-acceptance-model.pdf" target="_blank">open.ncl.ac.uk</a></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-brand">Post it! 📌</div>
+  <p>Team C2 — GLAM &nbsp;·&nbsp; Carnegie Mellon University &nbsp;·&nbsp; Information Systems</p>
+  <p style="margin-top:6px"><a href="index.html">Home</a> &nbsp;·&nbsp; <a href="demo.html">Demo</a> &nbsp;·&nbsp; <a href="connect.html">Connect</a></p>
+</footer>
+<script src="js/main.js"></script>
+</body>
+</html>

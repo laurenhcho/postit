@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
 body { background: #f0f4f3; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
-.demo-wrap { width: 700px; margin: 1.5rem auto; padding: 0 1rem 3rem; display: grid; grid-template-columns: 200px 460px; gap: 2rem; align-items: start; }
+.demo-wrap { width: 900px; margin: 1.5rem auto; padding: 0 1rem 3rem; display: grid; grid-template-columns: 200px 1fr; gap: 2rem; align-items: start; }
 .demo-intro { grid-column: 1 / -1; text-align: center; padding: 1.25rem 0 0.5rem; }
 .demo-intro h1 { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
 .demo-intro p { font-size: 13px; color: var(--ink-light); }
@@ -20,8 +20,7 @@ body { background: #f0f4f3; font-family: 'Helvetica Neue', Helvetica, Arial, san
 .instr-text { font-size: 10.5px; color: #666; line-height: 1.55; }
 
 /* Phone — fixed phone width */
-.phone { background: var(--white); border-radius: var(--r-phone); border: 2px solid var(--border); box-shadow: 0 16px 48px rgba(0,0,0,0.12); overflow: hidden; min-height: 640px; display: flex; flex-direction: column; width: 100%; max-width: 420px; }
-
+.phone { background: var(--white); border-radius: var(--r-phone); border: 2px solid var(--border); box-shadow: 0 16px 48px rgba(0,0,0,0.12); overflow: hidden; min-height: 640px; display: flex; flex-direction: column; width: 100%; max-width: 560px; }
 /* Phone topbar */
 .phone-topbar { background: var(--white); border-bottom: 1px solid #f0f6f3; padding: 12px 16px 0; flex-shrink: 0; }
 .phone-topbar-row { display: flex; align-items: center; justify-content: space-between; padding-bottom: 10px; }
@@ -29,7 +28,7 @@ body { background: #f0f4f3; font-family: 'Helvetica Neue', Helvetica, Arial, san
 .phone-create-btn { background: var(--teal); color: #fff; font-size: 11px; font-weight: 700; padding: 5px 12px; border-radius: 6px; border: none; cursor: pointer; }
 .cat-scroll { display: flex; gap: 6px; padding: 0 0 11px; overflow-x: auto; scrollbar-width: none; }
 .cat-scroll::-webkit-scrollbar { display: none; }
-.cat-pill { font-size: 11px; font-weight: 600; padding: 5px 13px; border-radius: 20px; white-space: nowrap; cursor: pointer; background: var(--white); color: var(--ink-mid); border: 1.5px solid var(--border); transition: all 0.15s; }
+.cat-pill { font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 20px; white-space: nowrap; cursor: pointer; background: var(--white); color: var(--ink-mid); border: 1.5px solid var(--border); transition: all 0.15s; }
 .cat-pill.active { background: var(--teal); color: #fff; border-color: var(--teal); }
 
 /* Screens */

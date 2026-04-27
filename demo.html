@@ -7,10 +7,17 @@
 <link rel="stylesheet" href="css/style.css">
 <style>
 body { background: #f0f4f3; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
-.demo-wrap { max-width: 420px; margin: 1.5rem auto; padding: 0 1rem 3rem; }
-.demo-intro { text-align: center; padding: 1.25rem 0 1rem; }
+.demo-wrap { max-width: 860px; margin: 1.5rem auto; padding: 0 1rem 3rem; display: grid; grid-template-columns: 190px 1fr; gap: 2rem; align-items: start; }
+.demo-intro { grid-column: 1 / -1; text-align: center; padding: 1.25rem 0 0.5rem; }
 .demo-intro h1 { font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
 .demo-intro p { font-size: 13px; color: var(--ink-light); }
+.demo-instructions { position: sticky; top: 72px; background: var(--white); border: 1px solid var(--border); border-radius: 10px; padding: 1rem 1rem; }
+.demo-instructions h3 { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--teal); margin-bottom: 12px; }
+.instr-section { margin-bottom: 13px; padding-bottom: 13px; border-bottom: 1px solid #f0f0f0; }
+.instr-section:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.instr-label { font-size: 11px; font-weight: 700; color: var(--ink); margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+.instr-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--teal); flex-shrink: 0; }
+.instr-text { font-size: 11px; color: #666; line-height: 1.6; }
 
 /* Phone */
 .phone { background: var(--white); border-radius: var(--r-phone); border: 2px solid var(--border); box-shadow: 0 16px 48px rgba(0,0,0,0.12); overflow: hidden; min-height: 640px; display: flex; flex-direction: column; }
@@ -221,6 +228,34 @@ body { background: #f0f4f3; font-family: 'Helvetica Neue', Helvetica, Arial, san
     <h1>Post it! — Interactive Demo</h1>
     <p>Upload a flyer or create an event. Browse, save, and sync to your calendar.</p>
   </div>
+
+  <aside class="demo-instructions">
+    <h3>How to use</h3>
+    <div class="instr-section">
+      <div class="instr-label"><div class="instr-dot"></div>Discover</div>
+      <div class="instr-text">Swipe <strong>right</strong> or tap <strong>✓</strong> to save an event. Swipe <strong>left</strong> or tap <strong>✕</strong> to skip. The calendar button saves and adds to Google Calendar. Filter events using the category pills at the top.</div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-label"><div class="instr-dot"></div>Saved</div>
+      <div class="instr-text">All events you swiped right on. Tap Remove to unsave. Events are synced to your Google Calendar automatically.</div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-label"><div class="instr-dot"></div>Buckets</div>
+      <div class="instr-text">Shared event playlists with friends. Tap <strong>+ Invite Friends</strong> to add people by name. Create a new bucket with <strong>+ New Bucket</strong>.</div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-label"><div class="instr-dot"></div>Map</div>
+      <div class="instr-text">See all campus events pinned on a live CMU map. Tap any event row to see its details.</div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-label"><div class="instr-dot"></div>Profile</div>
+      <div class="instr-text">Follow organizations to get notified when they post. Tap <strong>Settings</strong> to manage calendar sync and reminder preferences.</div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-label"><div class="instr-dot"></div>+ Create</div>
+      <div class="instr-text">Upload a flyer image — details are extracted automatically — or fill the form manually. Start typing a building name and CMU locations will autofill.</div>
+    </div>
+  </aside>
 
   <div class="phone" id="phone">
 
